@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ultimate Computer MCQ Test</title>
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+}
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:30px auto;
+    background:rgba(255,255,255,0.05);
+    padding:20px;
+    border-radius:15px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 0 20px rgba(0,255,255,0.3);
+}
+h1{text-align:center;}
+.question{margin-bottom:15px;padding:10px;border-bottom:1px solid rgba(255,255,255,0.2);}
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:30px;
+    background:cyan;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:15px;
+}
+button:hover{background:#00ffffaa;}
+.timer{text-align:right;font-weight:bold;font-size:18px;}
+.progress{height:10px;background:#444;border-radius:20px;margin-bottom:15px;}
+.progress-bar{height:10px;background:cyan;width:0%;border-radius:20px;}
+.result{margin-top:20px;background:#111;padding:15px;border-radius:10px;}
+.wrong{color:#ff6b6b;}
+.correct{color:#00ffcc;}
+input[type="text"]{padding:8px;border-radius:20px;border:none;margin-bottom:10px;width:200px;}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>🚀 Computer Fundamental Test</h1>
+
+<input type="text" id="username" placeholder="Enter Your Name">
+
+<div class="timer">Time Left: <span id="time">30:00</span></div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+<form id="quizForm"></form>
+<button type="button" onclick="submitQuiz()">Submit Test</button>
+
+<div id="result" class="result"></div>
+<button id="certificateBtn" style="display:none;" onclick="generateCertificate()">Download Certificate</button>
+</div>
+
+<script>
+
+const questions=[
+
+{q:"CPU ka full form kya hai?",options:["Central Process Unit","Central Processing Unit","Computer Processing Unit","Control Processing Unit"],correct:1},
+{q:"Computer ka dimaag kise kaha jata hai?",options:["Monitor","Keyboard","CPU","Mouse"],correct:2},
+{q:"RAM ka full form kya hai?",options:["Read Access Memory","Random Access Memory","Run Access Memory","Real Access Memory"],correct:1},
+{q:"ROM ka full form kya hai?",options:["Read Only Memory","Run Only Memory","Random Only Memory","Real Only Memory"],correct:0},
+{q:"Hard Disk kis type ki memory hai?",options:["Primary","Secondary","Cache","Virtual"],correct:1},
+{q:"Input device ka example?",options:["Monitor","Printer","Keyboard","Speaker"],correct:2},
+{q:"Output device ka example?",options:["Mouse","Keyboard","Monitor","Scanner"],correct:2},
+{q:"1 Byte me kitne bits hote hain?",options:["4","8","16","32"],correct:1},
+{q:"WWW ka full form?",options:["World Wide Web","Web World Wide","Wide World Web","World Web Wide"],correct:0},
+{q:"OS ka full form?",options:["Open Software","Operating System","Order System","Online System"],correct:1},
+
+{q:"Computer ka avishkar kisne kiya?",options:["Charles Babbage","Bill Gates","Steve Jobs","Mark Zuckerberg"],correct:0},
+{q:"Monitor kis prakar ka device hai?",options:["Input","Output","Storage","Processing"],correct:1},
+{q:"Keyboard me function keys kitni hoti hain?",options:["10","11","12","14"],correct:2},
+{q:"1024 Bytes barabar?",options:["1 MB","1 KB","1 GB","1 TB"],correct:1},
+{q:"Excel file extension?",options:[".docx",".xls",".ppt",".txt"],correct:1},
+{q:"Word file extension?",options:[".docx",".xlsx",".ppt",".exe"],correct:0},
+{q:"Website address ko kya kehte hain?",options:["URL","HTTP","FTP","IP"],correct:0},
+{q:"Printer kis type ka device hai?",options:["Input","Output","Storage","Processing"],correct:1},
+{q:"Mouse ka avishkar kisne kiya?",options:["Charles Babbage","Douglas Engelbart","Bill Gates","Tim Berners-Lee"],correct:1},
+{q:"Antivirus ka kaam?",options:["Game","Virus hatana","Music","Typing"],correct:1},
+
+{q:"Data ka sabse chhota unit?",options:["Byte","Bit","KB","MB"],correct:1},
+{q:"ALU ka full form?",options:["Arithmetic Logic Unit","Array Logic Unit","Access Logic Unit","Automatic Logic Unit"],correct:0},
+{q:"Control Unit ka kaam?",options:["Calculation","Control","Storage","Print"],correct:1},
+{q:"CD kis type ki memory hai?",options:["Primary","Secondary","Cache","RAM"],correct:1},
+{q:"Computer virus kya hai?",options:["Hardware","Software","Malicious Program","Game"],correct:2},
+{q:"Email bhejne ke liye kya jaruri hai?",options:["Internet","Printer","Scanner","Speaker"],correct:0},
+{q:"Google kya hai?",options:["Operating System","Search Engine","Browser","Software"],correct:1},
+{q:"Ctrl+C ka use?",options:["Paste","Copy","Cut","Undo"],correct:1},
+{q:"Ctrl+V ka use?",options:["Paste","Copy","Cut","Undo"],correct:0},
+{q:"Ctrl+X ka use?",options:["Paste","Copy","Cut","Undo"],correct:2},
+
+{q:"Binary system me kitne digits?",options:["2","8","10","16"],correct:0},
+{q:"IP ka full form?",options:["Internet Protocol","Internal Protocol","Internet Program","Internal Program"],correct:0},
+{q:"HTTP ka full form?",options:["Hyper Text Transfer Protocol","High Text Transfer Protocol","Hyper Transfer Text Protocol","Hyper Tool Transfer Protocol"],correct:0},
+{q:"RAM kis type ki memory?",options:["Permanent","Temporary","Secondary","Optical"],correct:1},
+{q:"ROM kis type ki memory?",options:["Temporary","Permanent","Cache","Virtual"],correct:1},
+{q:"Laptop kya hai?",options:["Software","Hardware","Network","Virus"],correct:1},
+{q:"Scanner ka kaam?",options:["Print","Scan","Type","Play"],correct:1},
+{q:"Firewall ka use?",options:["Security","Printing","Typing","Storage"],correct:0},
+{q:"Calculation ka kaam kaun karta hai?",options:["CU","ALU","RAM","ROM"],correct:1},
+{q:"WWW kisne invent kiya?",options:["Tim Berners-Lee","Bill Gates","Charles Babbage","Steve Jobs"],correct:0},
+
+{q:"USB full form?",options:["Universal Serial Bus","United Serial Bus","Universal System Bus","United System Bus"],correct:0},
+{q:"Software kitne prakar ke?",options:["1","2","3","4"],correct:1},
+{q:"System Software example?",options:["Windows","MS Word","Excel","PowerPoint"],correct:0},
+{q:"Application Software example?",options:["Linux","Windows","MS Word","DOS"],correct:2},
+{q:"Cache memory ka use?",options:["Speed badhana","Storage","Print","Type"],correct:0},
+{q:"Bluetooth ka use?",options:["Print","Wireless Transfer","Type","Scan"],correct:1},
+{q:"Recycle Bin ka kaam?",options:["Restore deleted file","Print","Scan","Copy"],correct:0},
+{q:"Folder ka use?",options:["Organize files","Delete","Print","Scan"],correct:0},
+{q:"Save shortcut key?",options:["Ctrl+S","Ctrl+P","Ctrl+Z","Ctrl+A"],correct:0},
+{q:"Undo shortcut key?",options:["Ctrl+Y","Ctrl+Z","Ctrl+U","Ctrl+R"],correct:1}
+
+];
+
+// shuffle questions
+questions.sort(()=>Math.random()-0.5);
+
+const form=document.getElementById("quizForm");
+
+questions.forEach((item,index)=>{
+    let options=[...item.options];
+    options.sort(()=>Math.random()-0.5);
+    item.shuffledOptions=options;
+    item.correctAnswer=options.indexOf(item.options[item.correct]);
+
+    const div=document.createElement("div");
+    div.classList.add("question");
+    div.innerHTML=`<p>${index+1}. ${item.q}</p>`;
+    options.forEach((opt,i)=>{
+        div.innerHTML+=`<label>
+        <input type="radio" name="q${index}" value="${i}"> ${opt}
+        </label><br>`;
+    });
+    form.appendChild(div);
+});
+
+// Timer
+let time=1800;
+const timer=setInterval(()=>{
+    let min=Math.floor(time/60);
+    let sec=time%60;
+    document.getElementById("time").innerText=
+    `${min}:${sec<10?"0":""}${sec}`;
+    time--;
+    if(time<0){
+        clearInterval(timer);
+        alert("Time Up!");
+        submitQuiz();
+    }
+},1000);
+
+// Progress bar
+form.addEventListener("change",()=>{
+    let answered=document.querySelectorAll("input[type=radio]:checked").length;
+    document.getElementById("progressBar").style.width=
+    (answered/questions.length)*100+"%";
+});
+
+function submitQuiz(){
+    clearInterval(timer);
+    let score=0;
+    let resultHTML="";
+    questions.forEach((item,index)=>{
+        let selected=document.querySelector(`input[name="q${index}"]:checked`);
+        if(selected){
+            if(parseInt(selected.value)===item.correctAnswer){
+                score++;
+            }else{
+                resultHTML+=`<p class="wrong">Q${index+1} ❌ Correct: ${item.shuffledOptions[item.correctAnswer]}</p>`;
+            }
+        }else{
+            resultHTML+=`<p class="wrong">Q${index+1} ❌ Not Attempted | Correct: ${item.shuffledOptions[item.correctAnswer]}</p>`;
+        }
+    });
+
+    let percent=((score/questions.length)*100).toFixed(2);
+    let grade="Fail";
+    if(percent>=90) grade="A+";
+    else if(percent>=75) grade="A";
+    else if(percent>=60) grade="B";
+    else if(percent>=40) grade="C";
+
+    document.getElementById("result").innerHTML=
+    `<h2 class="correct">Score: ${score}/${questions.length}</h2>
+     <h3>Percentage: ${percent}%</h3>
+     <h3>Grade: ${grade}</h3>` + resultHTML;
+
+    document.getElementById("certificateBtn").style.display="inline-block";
+}
+
+function generateCertificate(){
+    let name=document.getElementById("username").value||"Student";
+    let win=window.open("","","width=800,height=600");
+    win.document.write(`
+    <h1 style='text-align:center;'>Certificate of Achievement</h1>
+    <h2 style='text-align:center;'>This certifies that</h2>
+    <h1 style='text-align:center;color:blue;'>${name}</h1>
+    <h3 style='text-align:center;'>has completed Computer Fundamental Test</h3>
+    <h3 style='text-align:center;'>Date: ${new Date().toLocaleDateString()}</h3>
+    `);
+    win.print();
+}
+
+</script>
+</body>
+</html>
